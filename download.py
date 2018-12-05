@@ -3,13 +3,14 @@ import sys
 import shutil
 from google_images_download import google_images_download   #importing the retrival library
 from PIL import Image
-from random import randint
+from random import randint, random
 
 def generate_initial_population(query, population_size, verbose):
     # ---- Function Variables ---- #
     dirName = "population"
     path = "downloads"
     population_count = 0
+    population = []
 
     # ------------- Remove Past Images ------------------------------------------------------------ #
     if os.path.exists(path):
@@ -41,7 +42,8 @@ def generate_initial_population(query, population_size, verbose):
             src_image = Image.open(path + '/' + filename)
             if src_image and population_count < population_size:
                 new_image = src_image.resize((1024,1024), resample=0)
-                new_image.save(dirName + '/' + str(population_count) + '.png')
+                population.append(new_image)
+                #new_image.save(dirName + '/' + str(population_count) + '.png')
                 population_count += 1
         except:
             print("Cleanup Failed!")
@@ -49,6 +51,7 @@ def generate_initial_population(query, population_size, verbose):
 
     if population_count is population_size:
         print("\nSuccessfully Generated Initial Population")
+        return population
     elif population_count > 0:
         print("\nFailed To Generate Some Members Of Initial Population")
     else:
@@ -65,26 +68,29 @@ query += sys.argv[len(sys.argv)-1] + " texture"
 population_size = 20
 verbose = True
 
-generate_initial_population(query, population_size, verbose)
+population = generate_initial_population(query, population_size, verbose)
 
-
-# --------------- Display Using Tkinter --------------------------------------------------------#
-
-# --------------- Selection --------------------------------------------------------------------#
-
-"""
-# --------------- Crossover --------------------------------------------------------------------#
-imgs = []
-for filename in os.listdir(dirName):
-    imgs.append(Image.open(dirName + "/" + filename))
-new_image = imgs[0]
-for i in range(1, population_size-1):
-    print("merging images " + str(i) + " and " + str(i+1))
+# -------------- Create First Children -------------------------------------------------------- #
+new_population = []
+i = 0
+while i < population_size:
+    first = randint(0, population_size)
+    second = randint(0, population_size)
     try:
-        new_image = Image.blend(imgs[i],imgs[i+1],0.5)
+        new_image = Image.blend(population[first], population[second], (random()*0.5)+0.25)
+        new_image.save('population/gen_1_individual_' + str(i) + '.png')
+        new_population.append(new_image)
+        i += 1
     except:
-        pass
+        print("Image " + str(first) + " and " + str(second) + " Failed To Blend!")
 
-new_image.save("new_image.png");
-new_image.show()
-"""
+population = new_population
+population_size = len(population)
+print("\nGenerated "+ str(population_size) +" Children")
+
+# --------------- Display Using Tkinter -------------------------------------------------------- #
+
+# --------------- Selection -------------------------------------------------------------------- #
+
+# --------------- Crossover -------------------------------------------------------------------- #
+
