@@ -3,7 +3,7 @@ import sys
 import shutil
 from google_images_download import google_images_download   #importing the retrival library
 from PIL import Image
-from random import randint, random
+from random import randint, random, shuffle
 
 def generate_initial_population(query, population_size, verbose):
     # ---- Function Variables ---- #
@@ -51,16 +51,44 @@ def generate_initial_population(query, population_size, verbose):
 
     if population_count is population_size:
         print("\nSuccessfully Generated Initial Population")
-        return population
     elif population_count > 0:
         print("\nFailed To Generate Some Members Of Initial Population")
+        return None
     else:
         print("\nFailed To Generate Initial Population")
+        return None
     print("Population Size: " + str(population_count))
+
+    shuffle(population)
+
+    # -------------- Create First Children -------------------------------------------------------- #
+    new_population = []
+    i = 0
+    tried_combos = []
+    while i < population_size:
+        img_one = population[randint(0, population_size-1)]
+        img_two = population[randint(0, population_size-1)]
+        if img_one is not img_two:
+            try:
+                new_image = Image.blend(img_one, img_two, (0.25 * random()) + 0.375)
+                new_image.save('population/gen_1_individual_' + str(i) + '.png')
+                new_population.append((new_image, 1))
+                print(str(i+1) + " Images Merged")
+                i += 1
+            except:
+                print("Image " + str(img_one) + " and " + str(img_two) + " Failed To Blend!")
+
+    population = new_population
+    population_size = len(population)
+    print("\nGenerated "+ str(population_size) +" Children")
+
+    shuffle(new_population)
+
+    return new_population
 
 # -- MAIN -- #
 # ------------- Proccess User input ----------------------------------------------------------- #
- 
+"""
 query = ""
 for i in range(1, len(sys.argv)-1):
     query += sys.argv[i] + " texture,"
@@ -69,28 +97,5 @@ population_size = 20
 verbose = True
 
 population = generate_initial_population(query, population_size, verbose)
-
-# -------------- Create First Children -------------------------------------------------------- #
-new_population = []
-i = 0
-while i < population_size:
-    first = randint(0, population_size)
-    second = randint(0, population_size)
-    try:
-        new_image = Image.blend(population[first], population[second], (random()*0.5)+0.25)
-        new_image.save('population/gen_1_individual_' + str(i) + '.png')
-        new_population.append(new_image)
-        i += 1
-    except:
-        print("Image " + str(first) + " and " + str(second) + " Failed To Blend!")
-
-population = new_population
-population_size = len(population)
-print("\nGenerated "+ str(population_size) +" Children")
-
-# --------------- Display Using Tkinter -------------------------------------------------------- #
-
-# --------------- Selection -------------------------------------------------------------------- #
-
-# --------------- Crossover -------------------------------------------------------------------- #
-
+print(population)
+"""
