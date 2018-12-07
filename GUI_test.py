@@ -24,8 +24,7 @@ Don't worry too much about the math lmfao
 
 #method for each button
 def test_method(image): 
-	print(image)
-
+	image.show()
 
 def gui_creation(population_list):
 
@@ -55,24 +54,22 @@ def gui_creation(population_list):
 			col_index = 0
 			row_index = row_index + 1	
 
-		individual = individual.resize((230,230), resample = 0) #images are 1024x1024 originally
-		individual = ImageTk.PhotoImage(individual)
+		display_individual = individual.copy().resize((256,256), resample = 0) #images are 1024x1024 originally
+		display_individual = ImageTk.PhotoImage(display_individual)
 
 		#store image to prevent the trash collection from deleting it
-		image_list.append(individual)
+		image_list.append(display_individual)
 
 		#create buttons
 		action_with_arg = partial(test_method, individual) #dynamically create button actions
 		button_list.append(Button(button_grid, command = action_with_arg))
-		button_list[list_index].config(image = individual)
+		button_list[list_index].config(image = display_individual)
 		button_list[list_index].grid(row = row_index, column = col_index, padx = 5, pady = 5)
 
 		col_index = col_index + 1
 		list_index = list_index + 1
 
-		print("ayyy")
-
-	T = Label(text_frame, text="Select ur fav!")
+	T = Label(text_frame, text="Upvote the ones you like!")
 	T.config(font=("Courier", 36))
 	T.pack(side=TOP, padx=5, pady=5)
 		
