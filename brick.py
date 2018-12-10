@@ -1,6 +1,6 @@
 import genetic_algorithm
 from download import generate_initial_population
-from GUI_test import gui_creation
+from GUI_test import gui_creation_by_pixels
 from PIL import Image
 import sys
 
@@ -20,11 +20,11 @@ if __name__ == "__main__":
     # assign 60 raw images from google
     # raw_images = function(60)
 
-    images = generate_initial_population(query, num_queries, population_size, verbose)
+    population = generate_initial_population(query, num_queries, population_size, verbose)
     # initial array of doubles, image with fitness
     # all images start with fitness 1
 
-    gui_creation(images)
+    gui_creation_by_pixels(population)
 
     """
     # loop until user ends program
