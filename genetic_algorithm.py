@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageFilter
 from random import random, choice, shuffle
 
 def crossover(individual_one, individual_two):
@@ -15,12 +15,14 @@ def crossover(individual_one, individual_two):
     return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
 
 def mutate(im):
-	v = int(random() * 30)
-	vr = int(random() * v)
-	vg = int(random() * v)
-	vb = int(random() * v)
-	colors = {}
+	if(random() > 0.2):
+		return im
 	width, height = im.size
+	v = int(random() * 50) + 10
+	vr = int(((random() * 2) - 1) * v)
+	vg = int(((random() * 2) - 1) * v)
+	vb = int(((random() * 2) - 1) * v)
+	colors = {}
 	for x in range(width):
 	    for y in range(height):
 	        r,g,b = im.getpixel((x,y))
@@ -60,6 +62,7 @@ def mutate(im):
 		im.paste(crop_bl, (crop_br.size[0], 0))
 		im.paste(crop_tr, (0, crop_br.size[1]))
 		im.paste(crop_tl, (crop_br.size[0], crop_br.size[1]))
+	return im.filter(ImageFilter.SHARPEN)
 		
 def generate_successors(images):
     """
