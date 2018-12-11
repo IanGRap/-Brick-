@@ -65,13 +65,12 @@ def generate_successors(images):
             if p_low <= rand and rand < p_high and tup not in parents:
                 parents.append(tup)
 
-    results = shuffle(parents)
     nextGen = []
 
-    for i in range(1, len(parents)):
-        if len(nextGen) < len(images):
-            nextGen.append(crossover(parents[i-1], parents[i]))
-
-    nextGen.append(crossover(parents[0], parents[len(parents)-1]))
+    while len(nextGen) < len(images):
+        shuffle(parents)
+        for i in range(1, len(parents)):
+            if len(nextGen) < len(images):
+                nextGen.append(crossover(parents[i-1], parents[i]))
 
     return nextGen

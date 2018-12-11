@@ -3,7 +3,7 @@ from download import generate_initial_population
 from GUI_test import gui_creation_by_pixels
 from PIL import Image
 import sys
-from random import randint, random, shuffle
+from random import randint, random, shuffle, randrange
 
 def generate_next_generation(population, population_size, generation):
     i = len(population)
@@ -39,6 +39,23 @@ def generate_next_generation(population, population_size, generation):
 
     shuffle(population)
 
+def restock(population, population_size, raw):
+    print("restocking...")
+    if len(raw) > 0:
+        while len(population) < population_size:
+            image_to_clean = raw.pop(randrange(len(raw)))
+            print("Cleaning up " + str(image_to_clean))
+            try:
+                if image_to_clean and len(population) < population_size:
+                    new_image = image_to_clean.resize((1024,1024), resample=0)
+                    population.append((new_image, 1))
+            except:
+                print("Cleanup Failed!")
+                pass
+        return True
+    return False
+
+
 if __name__ == "__main__":
     # Proccess user query
     query = ""
@@ -50,15 +67,12 @@ if __name__ == "__main__":
     num_queries += 1
     population_size = 20
     verbose = True
-
-    #raw_images = []
-    # assign 60 raw images from google
-    # raw_images = function(60)
     
     # initial array of doubles, image with fitness
     # all images start with fitness 1
-    population = generate_initial_population(query, num_queries, population_size, verbose)
+    population, raw = generate_initial_population(query, num_queries, population_size, verbose)
     generation = 1
+    
     while True:
 
         exited_peacefully = gui_creation_by_pixels(population)
@@ -71,11 +85,18 @@ if __name__ == "__main__":
 
         # make sure we always have 20 images
         if len(population) < population_size:
-            #randomly blend 3 raw images together and add it to images
-            generate_next_generation(population, population_size, generation)
+            if not restock(population, population_size, raw):
+                #randomly blend 3 raw images together and add it to images
+                generate_next_generation(population, population_size, generation)
 
         generation += 1
 
         population = generate_successors(population)
 
         population.sort(key=lambda im: im[1], reverse=True)
+
+        print("Population After Crossover")
+        i = 0
+        for individual in population:
+            print("The number " + str(i) + " Image has fitness " + str(individual[1]))
+            i += 1

@@ -11,7 +11,7 @@ def generate_initial_population(query, num_queries, population_size, verbose):
     path = "downloads"
     population_count = 0
     population = []
-    images_of_each_type = population_size//num_queries + ((population_size//num_queries)//10 + 1)
+    images_of_each_type = population_size//num_queries * 3
 
     # ------------- Remove Past Images ------------------------------------------------------------ #
     if os.path.exists(path):
@@ -38,15 +38,18 @@ def generate_initial_population(query, num_queries, population_size, verbose):
 
     # -------------- Tidy Up Images ----------------------------------------------------------------#
 
+    raw = []
     for filename in os.listdir(path + '/'):
         print("Cleaning up " + filename)
         try:
             src_image = Image.open(path + '/' + filename)
+            raw.append(src_image)
             if src_image and population_count < population_size:
                 new_image = src_image.resize((1024,1024), resample=0)
                 population.append(new_image)
                 #new_image.save(dirName + '/' + str(population_count) + '.png')
                 population_count += 1
+                del raw[-1]
         except:
             print("Cleanup Failed!")
             pass
@@ -88,4 +91,4 @@ def generate_initial_population(query, num_queries, population_size, verbose):
 
     shuffle(new_population)
 
-    return new_population
+    return (new_population, raw)
