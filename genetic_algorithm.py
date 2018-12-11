@@ -1,7 +1,5 @@
 from PIL import Image
-from random import random
-
-good_fitness = 3
+from random import random, choice
 
 def crossover(image_one, image_two, fitness_one, fitness_two):
 	"""
@@ -12,8 +10,8 @@ def crossover(image_one, image_two, fitness_one, fitness_two):
 	alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
 	return Image.blend(image_one, image_two, alpha)
 
-def mutate(im, fitness):
-	v = (good_fitness/fitness) * 30
+def mutate(im):
+	v = int(random() * 30)
 	vr = int(random() * v)
 	vg = int(random() * v)
 	vb = int(random() * v)
@@ -30,9 +28,33 @@ def mutate(im, fitness):
 	        	nb = min(max(0, b + vb), 255)
 	        	colors[(r, g, b)] = (nr, ng, nb)
 	        	im.putpixel((x, y), (nr, ng, nb))
-
-def adjust_color_value(c):
-	if random() < 0.5:
-		return int(c + (255 - c) * random())
+	r = choice(range(3))
+	magnitude = int((0.5 * width) * random()) + int(0.25 * width)
+	if(r is 0):
+		area_one = (0, 0, magnitude, height)
+		area_two = (magnitude + 1, 0, width, height)
+		crop_one = im.crop(area_one)
+		crop_two = im.crop(area_two)
+		w = crop_two.size[0]
+		im.paste(crop_two)
+		im.paste(crop_one, (w, 0))
+	elif(r is 1):
+		area_one = (0, 0, width, magnitude)
+		area_two = (0, magnitude + 1, width, height)
+		crop_one = im.crop(area_one)
+		crop_two = im.crop(area_two)
+		h = crop_two.size[1]
+		im.paste(crop_two)
+		im.paste(crop_one, (0, h))
 	else:
-		return int(c - c * random())
+		mid = (int(random() * width), int(random() * height))
+		crop_tl = im.crop((0, 0, mid[0], mid[1]))
+		crop_bl = im.crop((0, mid[1] + 1, mid[0], height))
+		crop_tr = im.crop((mid[0] + 1, 0, width, mid[1]))
+		crop_br = im.crop((mid[0] + 1, mid[1] + 1, width, height))
+		im.paste(crop_br)
+		im.paste(crop_bl, (crop_br.size[0], 0))
+		im.paste(crop_tr, (0, crop_br.size[1]))
+		im.paste(crop_tl, (crop_br.size[0], crop_br.size[1]))
+		
+
