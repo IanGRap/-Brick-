@@ -80,7 +80,7 @@ def generate_initial_population(query, num_queries, population_size, verbose):
                 print(str(i+1) + " Images Merged")
                 i += 1
             except:
-                print("Image " + str(img_one) + " and " + str(img_two) + "and" + str(img_three) + " Failed To Blend!")
+                print("Images Failed To Blend!")
 
     population = new_population
     population_size = len(population)

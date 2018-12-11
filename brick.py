@@ -19,12 +19,22 @@ if __name__ == "__main__":
     #raw_images = []
     # assign 60 raw images from google
     # raw_images = function(60)
-
-    population = generate_initial_population(query, num_queries, population_size, verbose)
+    
     # initial array of doubles, image with fitness
     # all images start with fitness 1
+    population = generate_initial_population(query, num_queries, population_size, verbose)
 
-    gui_creation_by_pixels(population)
+    while True:
+
+        exited_peacefully = gui_creation_by_pixels(population)
+        if not exited_peacefully:
+            print("exited with X")
+            exit(0)
+
+        population.sort(key=lambda im: im[1], reverse=True)
+
+        for indivudual in population:
+            print(indivudual)
 
     """
     # loop until user ends program
