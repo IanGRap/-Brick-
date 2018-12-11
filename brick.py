@@ -1,4 +1,4 @@
-import genetic_algorithm
+from genetic_algorithm import *
 from download import generate_initial_population
 from GUI_test import gui_creation_by_pixels
 from PIL import Image
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         num_queries += 1
     query += sys.argv[len(sys.argv)-1] + " texture"
     num_queries += 1
-    population_size = 10
+    population_size = 20
     verbose = True
 
     #raw_images = []
@@ -60,41 +60,22 @@ if __name__ == "__main__":
     population = generate_initial_population(query, num_queries, population_size, verbose)
     generation = 1
     while True:
-        
-        # make sure we always have 20 images
-        while len(population) < population_size:
-            generation += 1
-            #randomly blend 3 raw images together and add it to images
-            generate_next_generation(population, population_size, generation)
 
         exited_peacefully = gui_creation_by_pixels(population)
         if not exited_peacefully:
             print("exited with X")
             exit(0)
 
-        population.sort(key=lambda im: im[1], reverse=True)
-
         #remove images with a fitness of 0 or under
         population = [individual for individual in population if individual[1] > 0]
 
-
-    """
-    # loop until user ends program
-    while True:
-
         # make sure we always have 20 images
-        while len(images) < 20:
-            pass
-            #randomly blend 3 raw images together and add it too images
+        if len(population) < population_size:
+            #randomly blend 3 raw images together and add it to images
+            generate_next_generation(population, population_size, generation)
 
-        # mutate images
-        for im in images:
-            genetic_algorithm.mutate(im[0], im[1])
+        generation += 1
 
-        # sort images by highest fitness
-        images.sort(key=lambda im: im[1], reverse=True)
+        population = generate_successors(population)
 
-        # input first 10 images into gui function
-        # images = function(images[:10])
-        pass
-    """
+        population.sort(key=lambda im: im[1], reverse=True)

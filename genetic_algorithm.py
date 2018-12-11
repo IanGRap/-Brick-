@@ -1,14 +1,18 @@
 from PIL import Image
-from random import random, choice
+from random import random, choice, shuffle
 
-def crossover(image_one, image_two, fitness_one, fitness_two):
-	"""
-		Input: 2 images with fitness values to crossover
-		Output: A single image made from linearly interpolating the input images
-		Assuming image inputs are pillow images with the same size
-	"""
-	alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
-	return Image.blend(image_one, image_two, alpha)
+def crossover(individual_one, individual_two):
+    """
+        Input: 2 images with fitness values to crossover
+        Output: A single image made from linearly interpolating the input images
+        Assuming image inputs are pillow images with the same size
+    """
+    image_one = individual_one[0]
+    image_two = individual_one[0]
+    fitness_one = individual_one[1]
+    fitness_two = individual_two[1]
+    alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
+    return (Image.blend(image_one, image_two, alpha), (fitness_one + fitness_two)/2)
 
 def mutate(im):
 	v = int(random() * 30)
@@ -57,4 +61,37 @@ def mutate(im):
 		im.paste(crop_tr, (0, crop_br.size[1]))
 		im.paste(crop_tl, (crop_br.size[0], crop_br.size[1]))
 		
+def generate_successors(images):
+    """
+        Input: List of (image, fitness) after user has evaluated
+        Output: List of next gen
+    """
+    parents = []
 
+    Sum = 0
+    for im, fit in images:
+        Sum += fit
+
+    images.sort(key=lambda im: im[1], reverse=True)
+    while len(parents) < len(images) // 2:
+        p_low = 0
+        p_high = 0
+        rand = random()
+
+        for tup in images:
+            # tup is a tuple: (img, fitness)
+            p_low = p_high
+            p_high += tup[1] / Sum
+            if p_low <= rand and rand < p_high and tup not in parents:
+                parents.append(tup)
+
+    results = shuffle(parents)
+    nextGen = []
+
+    for i in range(1, len(parents)):
+        if len(nextGen) < len(images):
+            nextGen.append(crossover(parents[i-1], parents[i]))
+
+    nextGen.append(crossover(parents[0], parents[len(parents)-1]))
+
+    return nextGen
