@@ -74,7 +74,7 @@ def generate_initial_population(query, num_queries, population_size, verbose):
         if img_one is not img_two and img_two is not img_three and img_one is not img_three:
             try:
                 temp_image = Image.blend(img_one, img_two, 1/2)
-                new_image = Image.blend(img_three, temp_image, 1/2)
+                new_image = Image.blend(img_three, temp_image, 2/3)
                 new_image.save('population/gen_1_individual_' + str(i) + '.png')
                 new_population.append((new_image, 1))
                 print(str(i+1) + " Images Merged")

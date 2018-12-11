@@ -76,25 +76,3 @@ if __name__ == "__main__":
 
         #remove images with a fitness of 0 or under
         population = [individual for individual in population if individual[1] > 0]
-
-
-    """
-    # loop until user ends program
-    while True:
-
-        # make sure we always have 20 images
-        while len(images) < 20:
-            pass
-            #randomly blend 3 raw images together and add it too images
-
-        # mutate images
-        for im in images:
-            genetic_algorithm.mutate(im[0], im[1])
-
-        # sort images by highest fitness
-        images.sort(key=lambda im: im[1], reverse=True)
-
-        # input first 10 images into gui function
-        # images = function(images[:10])
-        pass
-    """
