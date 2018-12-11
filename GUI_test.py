@@ -50,7 +50,15 @@ def on_downvote(individual, index):
         downvote_button_list[index].config(relief=RAISED, bg = "#cccccc")
 
 def save_image(image):
-    image.save("output.png")
+	fileNum = 1
+	while True: 
+		output = "output" + str(fileNum) + ".png"
+		exists = os.path.isfile(output)
+		if not exists:
+			image.save(output)
+			print("output to ", output)
+			break
+		fileNum += 1
 
 def submit_ratings(population, root):
     for i in range(10):
@@ -131,10 +139,10 @@ def gui_creation_by_pixels(population):
 
     print("End Of Generated")
 
-    succeful_exit = False
+    successful_exit = False
 
     if len(submitted) > 0:
-        succeful_exit = True
+        successful_exit = True
         submitted.clear()
 
-    return succeful_exit
+    return successful_exit
