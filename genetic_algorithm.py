@@ -3,6 +3,19 @@ from random import random
 
 good_fitness = 3
 
+def crossover(individual_one, individual_two):
+    """
+        Input: 2 images with fitness values to crossover
+        Output: A single image made from linearly interpolating the input images
+        Assuming image inputs are pillow images with the same size
+    """
+    image_one = individual_one[0]
+    image_two = individual_one[0]
+    fitness_one = individual_one[1]
+    fitness_two = individual_two[1]
+    alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
+    return (Image.blend(image_one, image_two, alpha), (fitness_one + fitness_two)/2)
+
 def mutate(im, fitness):
     v = (good_fitness/fitness) * 30
     vr = int(random() * v)
