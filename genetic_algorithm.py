@@ -1,5 +1,5 @@
 from PIL import Image
-from random import random
+from random import random, shuffle
 
 good_fitness = 3
 
@@ -46,7 +46,7 @@ def generate_successors(images):
         Input: List of (image, fitness) after user has evaluated
         Output: List of next gen
     """
-    parents = List()
+    parents = []
 
     Sum = 0
     for im, fit in images:
@@ -66,10 +66,12 @@ def generate_successors(images):
                 parents.append(tup)
 
     results = shuffle(parents)
-    nextGen = List()
+    nextGen = []
 
     for i in range(1, len(parents)):
         if len(nextGen) < len(images):
             nextGen.append(crossover(parents[i-1], parents[i]))
 
     nextGen.append(crossover(parents[0], parents[len(parents)-1]))
+
+    return nextGen
