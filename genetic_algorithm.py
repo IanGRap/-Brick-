@@ -12,7 +12,7 @@ def crossover(individual_one, individual_two):
     fitness_one = individual_one[1]
     fitness_two = individual_two[1]
     alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
-    return (Image.blend(image_one, image_two, alpha), (fitness_one + fitness_two)/2)
+    return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
 
 def mutate(im):
 	v = int(random() * 30)
