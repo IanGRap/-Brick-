@@ -15,7 +15,7 @@ def crossover(individual_one, individual_two):
     return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
 
 def mutate(im):
-    if(random() > 0.2):
+    if(random() > 0.05):
         return im
     width, height = im.size
     v = int(random() * 50) + 10
