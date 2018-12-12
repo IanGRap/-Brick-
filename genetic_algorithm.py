@@ -15,9 +15,10 @@ def crossover(individual_one, individual_two):
     return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
 
 def mutate(im):
-    if(random() > 0.2):
+    if(random() > 0.05):
         return im
     print("mutating " + str(im))
+    
     width, height = im.size
     v = int(random() * 50) + 10
     vr = int(((random() * 2) - 1) * v)
@@ -64,6 +65,7 @@ def mutate(im):
         im.paste(crop_tr, (0, crop_br.size[1]))
         im.paste(crop_tl, (crop_br.size[0], crop_br.size[1]))
     return im.filter(ImageFilter.SHARPEN)
+
 
 def generate_successors(images):
     """
