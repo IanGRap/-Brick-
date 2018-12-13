@@ -11,7 +11,8 @@ def crossover(individual_one, individual_two):
     image_two = individual_one[0]
     fitness_one = individual_one[1]
     fitness_two = individual_two[1]
-    alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
+    #alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
+    alpha = 0.5
     return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
 
 def mutate(im):
@@ -92,11 +93,15 @@ def generate_successors(images):
                 parents.append(tup)
 
     nextGen = []
+    used_combos = []
 
     while len(nextGen) < len(images):
         shuffle(parents)
         for i in range(1, len(parents)):
             if len(nextGen) < len(images):
-                nextGen.append(crossover(parents[i-1], parents[i]))
-
+                combo = (parents[i-1], parents[i])
+                if combo not in used_combos:
+                    used_combos.append(combo)
+                    nextGen.append(crossover(combo[0], combo[1]))
+    del used_combos
     return nextGen

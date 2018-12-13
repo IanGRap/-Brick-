@@ -137,8 +137,6 @@ def gui_creation_by_pixels(population):
 
     root.mainloop()
 
-    print("End Of Generated")
-
     successful_exit = False
 
     if len(submitted) > 0:
