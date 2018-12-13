@@ -122,6 +122,8 @@ if __name__ == "__main__":
     
     while True:
 
+        print("\n ~--- Starting Generation ", generation, " ---~\n")
+
         # Force RGB incoding
         for individual in population:
             if individual[0].mode != "RGB":

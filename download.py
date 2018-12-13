@@ -11,7 +11,7 @@ def generate_initial_population(query, num_queries, population_size, verbose, co
     path = "downloads"
     population_count = 0
     population = []
-    images_of_each_type = population_size//num_queries * 3
+    images_of_each_type = population_size//num_queries * 4
 
     # ------------- Remove Past Images ------------------------------------------------------------ #
     if os.path.exists(path):
