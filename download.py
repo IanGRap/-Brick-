@@ -5,7 +5,7 @@ from google_images_download import google_images_download   #importing the retri
 from PIL import Image
 from random import randint, random, shuffle
 
-def generate_initial_population(query, num_queries, population_size, verbose):
+def generate_initial_population(query, num_queries, population_size, verbose, copyright, safesearch):
     # ---- Function Variables ---- #
     dirName = "population"
     path = "downloads"
@@ -25,7 +25,9 @@ def generate_initial_population(query, num_queries, population_size, verbose):
     print("Downloading " + str(images_of_each_type) + " images for each query...")
     response = google_images_download.googleimagesdownload()   #class instantiation
 
-    arguments = {"keywords":query,"limit":images_of_each_type,"print_urls":verbose, "format":"jpg", "usage_rights":"labeled-for-nocommercial-reuse", "no_directory":True}   #creating list of arguments
+    arguments = {"keywords":query,"limit":images_of_each_type,"print_urls":verbose, "format":"jpg", "usage_rights":copyright, "no_directory":True}   #creating list of arguments
+    if safesearch:
+        arguments["safe_search"] = True
     paths = response.download(arguments)   #passing the arguments to the function
     print(paths)   #printing absolute paths of the downloaded images
 

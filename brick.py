@@ -4,6 +4,7 @@ from GUI_test import gui_creation_by_pixels
 from PIL import Image, ImageChops
 import sys
 from random import randint, random, shuffle, randrange
+import argparse
 
 def generate_next_generation(population, population_size, generation):
     i = len(population)
@@ -86,19 +87,37 @@ def remove_duplicates(population):
 
 if __name__ == "__main__":
     # Proccess user query
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--freeuse", help="If used images will be in the public domain", action="store_true")
+    parser.add_argument("-s", "--safesearch", help="If used safesearch is enabled", action="store_true")
+    parser.add_argument("-t", "--texture", help="If used textures are searched for", action="store_true")
+    parser.add_argument("-k", "--keyword",help="The keyword or keywords used to generate the initial population")
+    args = parser.parse_args()
+
+    queries = args.keyword.split()
     query = ""
-    num_queries = 0
-    for i in range(1, len(sys.argv)-1):
-        query += sys.argv[i] + " texture,"
+    num_queries = 1
+    if len(queries) == 0:
+        print("Required flag -k or --keyword to generate initial population")
+        exit(0)
+    for i in range(len(queries)-1):
+        query += queries[i]
+        if args.texture:
+            query += " texture"
+        query += ","
         num_queries += 1
-    query += sys.argv[len(sys.argv)-1] + " texture"
-    num_queries += 1
-    population_size = 10
+    query += queries[-1]
+    if args.texture:
+            query += " texture"
     verbose = True
-    
+    population_size = 10
+    copyright = "labeled-for-nocommercial-reuse"
+    if args.freeuse:
+        copyright = "labeled-for-reuse"
+
     # initial array of doubles, image with fitness
     # all images start with fitness 1
-    population, raw = generate_initial_population(query, num_queries, population_size, verbose)
+    population, raw = generate_initial_population(query, num_queries, population_size, verbose, copyright, args.safesearch)
     generation = 1
     
     while True:
