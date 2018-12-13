@@ -122,6 +122,27 @@ if __name__ == "__main__":
     
     while True:
 
+        # Force RGB incoding
+        for individual in population:
+            if individual[0].mode != "RGB":
+                print("Image Converted")
+                individual[0].convert(mode="RGB")
+
+        #remove images with a fitness of 0 or under
+        population = [individual for individual in population if individual[1] > 0]
+
+        population = remove_duplicates(population)
+        
+        # make sure we always have 20 images
+        if len(population) < population_size:
+            if not restock(population, population_size, raw):
+                #randomly blend 3 raw images together and add it to images
+                generate_next_generation(population, population_size, generation)
+
+        shuffle(population)
+
+        population.sort(key=lambda im: im[1], reverse=True)
+
         exited_peacefully = gui_creation_by_pixels(population)
         if not exited_peacefully:
             print("exited with X")
@@ -129,12 +150,6 @@ if __name__ == "__main__":
 
         #remove images with a fitness of 0 or under
         population = [individual for individual in population if individual[1] > 0]
-
-        # Force RGB incoding
-        for individual in population:
-            if individual[0].mode != "RGB":
-                print("Image Converted")
-                individual[0].convert(mode="RGB")
 
         population = remove_duplicates(population)
         
