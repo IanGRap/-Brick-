@@ -46,7 +46,7 @@ def generate_initial_population(query, num_queries, population_size, verbose, co
         try:
             src_image = Image.open(path + '/' + filename)
             raw.append(src_image)
-            if src_image and population_count < population_size:
+            if src_image and population_count < population_size * 2:
                 new_image = src_image.resize((1024,1024), resample=0)
                 population.append(new_image)
                 #new_image.save(dirName + '/' + str(population_count) + '.png')
@@ -56,13 +56,13 @@ def generate_initial_population(query, num_queries, population_size, verbose, co
             print("Cleanup Failed!")
             pass
 
-    if population_count is population_size:
+    if population_count is population_size * 2:
         print("\nSuccessfully Generated Initial Population")
     elif population_count > 0:
         print("\nFailed To Generate Some Members Of Initial Population")
         return None
     else:
-        print("\nFailed To Generate Initial Population")
+        print("\nFailed To Generate Any Members of Initial Population")
         return None
     print("Population Size: " + str(population_count))
 
@@ -73,9 +73,9 @@ def generate_initial_population(query, num_queries, population_size, verbose, co
     i = 0
     tried_combos = []
     while i < population_size:
-        img_one = population[randint(0, population_size-1)]
-        img_two = population[randint(0, population_size-1)]
-        img_three = population[randint(0, population_size-1)]
+        img_one = population[randint(0, population_size*2-1)]
+        img_two = population[randint(0, population_size*2-1)]
+        img_three = population[randint(0, population_size*2-1)]
         if img_one is not img_two and img_two is not img_three and img_one is not img_three:
             try:
                 temp_image = Image.blend(img_one, img_two, 1/2)

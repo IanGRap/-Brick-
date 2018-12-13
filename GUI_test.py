@@ -25,6 +25,7 @@ Don't worry too much about the math lmfao
 # "class" variables
 upvote_button_list = []
 downvote_button_list = []
+trash_button_list = []
 image_list = []
 button_list = []
 submitted = []
@@ -49,16 +50,22 @@ def on_downvote(individual, index):
     else:
         downvote_button_list[index].config(relief=RAISED, bg = "#cccccc")
 
+def on_trash(index):
+    if trash_button_list[index].cget("relief") == RAISED:
+        trash_button_list[index].config(relief=SUNKEN, bg = "#ffffff")
+    else:
+        trash_button_list[index].config(relief=RAISED, bg = "#cccccc")  
+
 def save_image(image):
-	fileNum = 1
-	while True: 
-		output = "output" + str(fileNum) + ".png"
-		exists = os.path.isfile(output)
-		if not exists:
-			image.save(output)
-			print("output to ", output)
-			break
-		fileNum += 1
+    fileNum = 1
+    while True: 
+        output = "output" + str(fileNum) + ".png"
+        exists = os.path.isfile(output)
+        if not exists:
+            image.save(output)
+            print("output to ", output)
+            break
+        fileNum += 1
 
 def submit_ratings(population, root):
     for i in range(10):
@@ -66,10 +73,13 @@ def submit_ratings(population, root):
             population[i] = (population[i][0], population[i][1] + 1)
         if downvote_button_list[i].cget("relief") == SUNKEN:
             population[i] = (population[i][0], population[i][1] - 1)
+        if trash_button_list[i].cget("relief") == SUNKEN:
+            population[i] = (population[i][0], -1)
 
     # clear lists in preperation for next function call
     upvote_button_list.clear()
     downvote_button_list.clear()
+    trash_button_list.clear()
     image_list.clear()
     button_list.clear()
 
@@ -87,8 +97,11 @@ def gui_creation_by_pixels(population):
     # get up and down button images
     up_image = Image.open("up.png")
     down_image = Image.open("down.png")
+    trash_image = Image.open("trash.png")
     display_up = ImageTk.PhotoImage(up_image)
     display_down = ImageTk.PhotoImage(down_image)
+    display_trash = ImageTk.PhotoImage(trash_image)
+
 
     # create buttons from population
     image_index = 0
@@ -118,11 +131,17 @@ def gui_creation_by_pixels(population):
             downvote_button_list.append(down_button)
             down_button.place(x=j*261 + 37 + 5,y=i*298 + 261 + 5, in_=root)
 
+            # create s button
+            trash_action = partial(on_trash, image_index)
+            trash_button = Button(root, command = trash_action, image = display_trash, borderwidth=0, bg = "#cccccc")
+            trash_button_list.append(trash_button)
+            trash_button.place(x=j*261 + 74 + 5, y=i*298 + 261 + 5, in_=root)
+
             # create save button
             save_action = partial(save_image, population[image_index][0])
             save_button = Button(root, command = save_action, text = "Save", font = ("Courier", 12))
             button_list.append(save_button)
-            save_button.place(x=j*261 + 74 + 5, y=i*298 + 261 + 5, in_=root)
+            save_button.place(x=j*261 + 116 + 5, y=i*298 + 261 + 5, in_=root)
 
             image_index += 1
 
