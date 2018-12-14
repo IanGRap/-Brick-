@@ -70,9 +70,9 @@ def save_image(image):
 def submit_ratings(population, root):
     for i in range(10):
         if upvote_button_list[i].cget("relief") == SUNKEN:
-            population[i] = (population[i][0], population[i][1] + 1)
+            population[i] = (population[i][0], population[i][1] + 20)
         if downvote_button_list[i].cget("relief") == SUNKEN:
-            population[i] = (population[i][0], population[i][1] - 1)
+            population[i] = (population[i][0], population[i][1] - 0.5)
         if trash_button_list[i].cget("relief") == SUNKEN:
             population[i] = (population[i][0], -1)
 

@@ -14,7 +14,8 @@ def crossover(individual_one, individual_two):
     #alpha = 0.5 + 0.49 * ((fitness_one - fitness_two)/(fitness_one + fitness_two))
     #alpha = 0.5
     alpha = random() * 0.5 + 0.25
-    return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
+    #return (mutate(Image.blend(image_one, image_two, alpha)), (fitness_one + fitness_two)/2)
+    return (mutate(Image.blend(image_one, image_two, alpha)), 1)
 
 def mutate(im):
     if(random() > 0.05):

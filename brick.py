@@ -44,14 +44,17 @@ def restock(population, population_size, raw):
     print("restocking...")
     if len(raw) > 0:
         while len(population) < population_size:
-            if len(raw) is 0:
+            if len(raw) < 2:
                 return False
-            image_to_clean = raw.pop(randrange(len(raw)))
-            print("Cleaning up " + str(image_to_clean))
+            image_to_clean_one = raw.pop(randrange(len(raw)))
+            image_to_clean_two = raw.pop(randrange(len(raw)))
+            print("Cleaning up " + str(image_to_clean_one))
+            print("Cleaning up " + str(image_to_clean_two))
             try:
-                if image_to_clean and len(population) < population_size:
-                    new_image = image_to_clean.resize((1024,1024), resample=0)
-                    population.append((Image.blend(new_image, population[randrange(len(population))][0], 0.5), 1))
+                if image_to_clean_one and image_to_clean_two and len(population) < population_size:
+                    new_image_one = image_to_clean_one.resize((1024,1024), resample=0)
+                    new_image_two = image_to_clean_two.resize((1024,1024), resample=0)
+                    population.append((Image.blend(new_image_one, new_image_two, 0.5), 1))
             except:
                 print("Cleanup Failed!")
                 pass
@@ -128,6 +131,12 @@ if __name__ == "__main__":
     while True:
 
         print("\n ~--- Starting Generation ", generation, " ---~\n")
+
+        print("Population Before Crossover")
+        i = 0
+        for individual in population:
+            print("The number " + str(i) + " Image has fitness " + str(individual[1]))
+            i += 1
 
         # Force RGB incoding
         for individual in population:
