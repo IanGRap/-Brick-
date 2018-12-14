@@ -92,6 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--safesearch", help="If used safesearch is enabled", action="store_true")
     parser.add_argument("-t", "--texture", help="If used textures are searched for", action="store_true")
     parser.add_argument("-k", "--keyword",help="The keyword or keywords used to generate the initial population")
+    parser.add_argument("-c", "--count",help="The count of images to be pulled from the web as reference",type=int)
     args = parser.parse_args()
 
     queries = args.keyword.split()
@@ -114,10 +115,14 @@ if __name__ == "__main__":
     copyright = "labeled-for-nocommercial-reuse"
     if args.freeuse:
         copyright = "labeled-for-reuse"
+    if args.count:
+        download_count = args.count
+    else:
+        download_count = 40
 
     # initial array of doubles, image with fitness
     # all images start with fitness 1
-    population, raw = generate_initial_population(query, num_queries, population_size, verbose, copyright, args.safesearch)
+    population, raw = generate_initial_population(query, num_queries, population_size, download_count, verbose, copyright, args.safesearch)
     generation = 1
     
     while True:
